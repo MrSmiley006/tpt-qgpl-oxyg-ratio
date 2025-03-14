@@ -12,7 +12,7 @@ function particleInArea(part, x, y, x1, y1)
    return false
 end
 
-for i = 20, 21, 1 do
+for i = 20, 300, 1 do
    -- initialize environment
    qgpl_counter = 0
    oxyg_counter = 0
