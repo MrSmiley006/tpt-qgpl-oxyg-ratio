@@ -12,10 +12,27 @@ function particleInArea(part, x, y, x1, y1)
    return false
 end
 
+function countOxygAndQgpl()
+   -- count QGPL and OXYG particles
+   local qgpl_counter = 0
+   local oxyg_counter = 0
+   for j in sim.parts() do
+      if sim.partProperty(j, "type") == elem.MRSMILEY006_PT_QGPL then
+	 qgpl_counter = qgpl_counter + 1
+      elseif sim.partProperty(j, "type") == elem.DEFAULT_PT_OXYG then
+	 oxyg_counter = oxyg_counter + 1
+      end
+   end
+   -- print the counts of QGPL and OXYG and the ratio of OXYG to QGPL
+   print("QGPL: " .. qgpl_counter)
+   print("OXYG: " .. oxyg_counter)
+   print("OXYG/QGPL ratio: " .. oxyg_counter / qgpl_counter)
+end
+
+event.register(event.aftersim, countOxygAndQgpl)
+
 for i = 20, 300, 1 do
    -- initialize environment
-   qgpl_counter = 0
-   oxyg_counter = 0
    sim.clearSim()
    sim.resetPressure()
    -- create a wall box and fill it with HYGN
@@ -34,21 +51,4 @@ for i = 20, 300, 1 do
       end
    end
    sim.pressure(0, 0, i-1, i-1, sim.MAX_PRESSURE)
-   -- wait until all PLSM turns into either OXYG or QGPL
-   print(particleInArea(elem.DEFAULT_PT_PLSM, 4, 4, i, i))
-   while particleInArea(elem.DEFAULT_PT_PLSM, 4, 4, i, i) or particleInArea(elem.DEFAULT_PT_HYGN, 4, 4, i, i) do
-      print(particleInArea(elem.DEFAULT_PT_PLSM, 4, 4, i, i))
-   end
-   -- count QGPL and OXYG particles
-   for j in sim.parts() do
-      if sim.partProperty(j, "type") == elem.MRSMILEY006_PT_QGPL then
-	 qgpl_counter = qgpl_counter + 1
-      elseif sim.partProperty(j, "type") == elem.DEFAULT_PT_OXYG then
-	 oxyg_counter = oxyg_counter + 1
-      end
-   end
-   -- print the counts of QGPL and OXYG and the ratio of OXYG to QGPL
-   print(qgpl_counter)
-   print(oxyg_counter)
-   print(oxyg_counter / qgpl_counter)
 end
